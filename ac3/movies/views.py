@@ -1,3 +1,270 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect, render_to_response, get_object_or_404
+from django.core.urlresolvers import reverse
+from django.template import RequestContext
 
 # Create your views here.
+from django.db.models import Count, Avg
+from .models import Movie, Rater, Rating, Genre
+from django.contrib.auth import authenticate, login, logout
+from django.contrib import messages
+from django.views.generic import View, RedirectView, ListView
+
+# for class-based
+from django.http import HttpResponse
+
+# Create your views here.
+from movies.forms import UserForm, RaterForm, RatingForm, LoginForm
+import datetime
+
+
+def handler404(request):
+    response = render_to_response('movies/404.html', {},
+                                  context_instance=RequestContext(request))
+    response.status_code = 404
+    return response
+
+
+def handler500(request):
+    response = render_to_response('movies/500.html', {},
+                                  context_instance=RequestContext(request))
+    response.status_code = 500
+    return response
+
+
+def view_fig(request, movie_id):
+    # inspired by: http://wiki.scipy.org/Cookbook/Matplotlib/Django
+    from random import randint
+    from django.http import HttpResponse
+
+    from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+    from matplotlib.figure import Figure
+    from matplotlib.dates import DateFormatter
+
+    movie = Movie.objects.get(pk=movie_id)
+    ratings = movie.rating_set.all().order_by('-posted')
+    fig=Figure()
+    ax=fig.add_subplot(111)
+    x=[]
+    y=[]
+    # datetime.datetime.fromtimestamp(int(self.posted))
+    # rating.posted
+    now_var = datetime.datetime.now()
+    delta = datetime.timedelta(days=1)
+    avg_span = 10
+    for i in range(len(ratings)-avg_span):
+        rating = ratings[i]
+        rsum = 0
+        for j in range(avg_span):
+            rsum += ratings[i+j].rating
+        y.append(rsum/avg_span)
+        x.append(datetime.datetime.fromtimestamp(rating.posted))
+#        x.append(rating.rater.age)
+#        y.append(rating.rating)
+    ax.plot_date(x, y, '-')
+#    ax.scatter(x, y)
+    ax.xaxis.set_major_formatter(DateFormatter('%Y-%m'))
+    fig.autofmt_xdate()
+    fig.suptitle("Ratings over time over "+str(avg_span)+" review intervals")
+    ax.set_xlabel("Year and Month", fontsize=12)
+    ax.set_ylabel("Average Rating (rolling basis)", fontsize=12)
+    canvas=FigureCanvas(fig)
+    response= HttpResponse(content_type='image/png')
+    canvas.print_png(response)
+    return response
+
+
+def view_index(request):
+    return render(request, "movies/index.html", {"genres": Genre.objects.all()})
+
+def view_top20_movies(request):
+    movies = Movie.objects.filter(total_save__gt=10).order_by('-avg_save')[:20]
+#    big_movies = Movie.objects.annotate(num_ratings=Count('rating')).filter(num_ratings__gt=10)
+#    movies = sorted(big_movies, key=lambda a: a.avg_rating(), reverse=True)[:20]
+    return render(request,
+                  "movies/top20.html",
+                  {"movies": movies})
+
+
+class Top20View(ListView):
+    template_name = 'movies/top20.html'
+    model = Movie # I think this might be why it wanted to sort by id #
+    paginate_by = 20
+    context_object_name = 'movies'
+    querryset = Movie.objects.filter(total_save__gt=10).order_by('-avg_save')
+
+    def get_queryset(self):
+        return self.querryset
+
+#    def get_context_data(self, **kwargs):
+#        context = super(Top20View, self).get_context_data(**kwargs)
+#        context['movies'] = Movie.objects.filter(total_save__gt=10).order_by('-avg_save')
+#        return context
+
+#    context_object_name = 'movies' # do we need these? I don't know.
+#    header = 'top_rated_movies'
+
+#    def get(self, request):
+#        return response
+
+
+def view_genre(request, genre_id):
+    genre = Genre.objects.get(pk=genre_id)
+    genre_movies = genre.movie_set.all()
+    big_movies = genre_movies.annotate(num_ratings=Count('rating')).filter(num_ratings__gt=10)
+    movies = sorted(big_movies, key=lambda a: a.avg_rating(), reverse=True)[:20]
+    return render(request,
+                    "movies/genre.html",
+                    {"genre": genre, "movies": movies})
+
+
+class GenreView(ListView):
+    template_name = 'movies/genre.html'
+#    model = Movie
+    paginate_by = 20
+    context_object_name = 'movies'
+    genre = None
+
+    def dispatch(self, *args, **kwargs):
+        self.genre = Genre.objects.get(pk=self.kwargs['genre_id'])
+        return super(GenreView, self).dispatch(*args, **kwargs)
+
+    def get_queryset(self):
+#        tag_list = self.kwargs['tags']
+#        self.genre = Genre.objects.get(pk=self.args[0])
+#        self.genre_id = self.genre.id
+
+#        genre = Genre.objects.get(pk=self.genre_id)
+#        genre_movies = self.genre.movie_set.filter(total_save__gt=10)
+#        big_movies = genre_movies.annotate(num_ratings=Count('rating')).filter(num_ratings__gt=10)
+#        movies = genre_movies.order_by('-avg_save')
+#        movies = sorted(big_movies, key=lambda a: a.avg_rating(), reverse=True)
+        return self.genre.movie_set.filter(total_save__gt=10).order_by('-avg_save')
+
+    def get_context_data(self, **kwargs):
+        context = super(GenreView, self).get_context_data(**kwargs)
+        context['genre'] = self.genre
+        return context
+    #
+    # def get(self, request):
+    #     self.genre = Genre.objects.get(pk=self.genre_id)
+    #     movies = self.get_queryset(genre_id)
+    #     return render(request, "movies/genre.html",
+    #             {"genre":self.genre, "movies":movies})
+
+
+def view_user(request, rater_id):
+    r = Rater.objects.get(pk=rater_id)
+    rs = r.rating_set.order_by('-posted')
+    return render(request,
+                  "movies/user.html",
+                  {"rater": r, "ratings": rs })
+
+
+class UserView(ListView):
+    template_name = 'movies/user.html'
+    paginate_by = 20
+    context_object_name = 'ratings'
+    rater = None
+
+    def get_queryset(self):
+        self.rater = get_object_or_404(Rater, pk=self.args[0])
+        rs = self.rater.rating_set.order_by('-posted')
+        return rs
+
+    def get_context_data(self, **kwargs):
+        context = super(UserView, self).get_context_data(**kwargs)
+        context['rater'] = self.rater
+        return context
+
+
+
+def view_rating(request, rating_id):
+    rating = Rating.objects.get(pk=rating_id)
+    if request.method == "POST":
+        rating_form = RatingForm(request.POST)
+        old_rating = rating.rating
+        new_rating = request.POST.get('rating')
+        new_review = request.POST.get('review')
+        rating.review = str(new_review)
+        rating.rating = int(new_rating)
+        rating.save()
+        rating.movie.update_store(new_rating, old_rating)
+        sometext = "You have updated your rating"
+        messages.add_message(request, messages.SUCCESS, sometext)
+        return redirect('user.html'+ str(rating.rater.id))
+    else:
+        rating_form = RatingForm(initial={"rating":rating.rating,
+                                    "review":rating.review})
+        return render(request, "movies/rating.html",
+                    {"rating": rating, "rating_form": rating_form})
+
+
+def view_movie(request, movie_id):
+    movie = Movie.objects.get(pk=movie_id)
+    rs = movie.rating_set.order_by('-posted')[:200]
+    if request.method == "POST":
+        rating_form = RatingForm(request.POST)
+        new_rating = request.POST.get('rating')
+        new_review = request.POST.get('review')
+        user = request.user
+        r = Rating(rater=user.rater, movie=movie, rating=new_rating, review=new_review)
+        dt_now = datetime.datetime.now()
+        post_int = (dt_now - datetime.datetime(1970, 1, 1)).total_seconds()
+        r.posted = post_int
+        r.save()
+        movie.update_store(new_rating)
+        sometext = "You have rated this movie {} stars, ".format(new_rating)
+        sometext += "{}.".format(user.username)
+        messages.add_message(request, messages.SUCCESS, sometext)
+#        return redirect('view_movie')
+        return render(request,
+                  "movies/movie.html",
+                  {"movie": movie, "ratings": rs, "user_rate": True,
+                   "rating_form": rating_form, "star_hist": movie.star_hist() })
+    else:
+        rating_form = RatingForm()
+        user = request.user
+        if user is not None and user.is_authenticated():
+            user_rate = user.rater.has_rated(movie)
+        else:
+            user_rate = False
+        return render(request,
+                      "movies/movie.html",
+                      {"movie": movie, "ratings": rs, "user_rate": user_rate,
+                       "rating_form": rating_form })
+
+
+def view_dashboard(request):
+    user = request.user
+    rater = user.rater
+    if request.method == "GET":
+        pass
+    elif request.method == "POST":
+        if "user_edit" in request.POST:
+            user_form = UserForm(request.POST)
+            if user_form.is_valid():
+                user.username = requet.POST.get('username')
+                user.email = requet.POST.get('email')
+                user.save()
+                messages.add_message(request, messages.SUCCESS, "You have updated your account")
+        elif "rater_edit" in request.POST:
+            rater_form = RaterForm(request.POST)
+            if rater_form.is_valid():
+                rater.age = request.POST.get('age')
+                rater.gender = request.POST.get('gender')
+                rater.occupation = request.POST.get('occupation')
+                rater.zip_code = request.POST.get('zip_code')
+                rater.save()
+                messages.add_message(request, messages.SUCCESS, "You have updated your profile")
+        elif "delete_button" in request.POST:
+            idx = int(request.POST.get('rating'))
+            rating = Rating.objects.get(pk=idx)
+            sometext = "Sucessfully deleted rating of {}".format(rating.movie.title)
+            Rating.objects.get(pk=idx).delete()
+            messages.add_message(request, messages.SUCCESS, sometext)
+
+    user_form = UserForm(initial={'username':user.username, 'email':user.email})
+    rater_form = RaterForm(initial = {'age':rater.age, 'gender':rater.gender,
+                        'occupation':rater.occupation, 'zip_code':rater.zip_code})
+    return render(request, "movies/dashboard.html", {'user_form': user_form,
+                                        'rater_form': rater_form})

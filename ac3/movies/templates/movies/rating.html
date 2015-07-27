@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+
+{% block content %}
+
+    <h2>User: {{ rating.rater.user.username }}'s rating of {{ rating.movie.title }}</h2>
+    {% ifequal rating.rater.user.id request.user.id %}
+      <form method="POST" action="{% url 'view_rating' rating.id %}">
+            {% csrf_token %}
+            {% bootstrap_form rating_form %}
+          <input type="submit" name="submit" value="Update your Rating"/>
+      </form>
+    {% else %}
+    <p>You are not allowed to edit this review</p>
+    <p>...return to <a href="{% url 'view_user' rating.rater.id %}">
+                    {{ rating.rater.user.username }}'s page</a>.</p>
+    {% endifequal %}
+
+{% endblock %}

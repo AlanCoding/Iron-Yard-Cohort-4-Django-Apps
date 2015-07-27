@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+
+{% block content %}
+
+    <p>
+      <div style="float:left"><a href="{% url 'view_genre' genre.prior_genre %}">
+          Previous genre<br />({{ genre.prior_name }})</a></div>
+      <div style="float:right"><a href="{% url 'view_genre' genre.next_genre %}">
+          Next genre<br />({{ genre.next_name }})</a></div>
+      <div>&nbsp;</div>
+    </p>
+    <h2>&nbsp;</h2>
+
+    <div class="jumbotron">
+      <h1>{{ genre.text }}</h1>
+      <p>Genre page
+      </p>
+    </div>
+
+    <p>There are {{ genre.total_movies }} movies in this genre</p>
+
+
+    <h2>Top movies in genre</h2>
+    <p>(highest scoring, reviewed by 10 or more people)</p>
+
+    {% bootstrap_pagination page_obj %}
+
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Movie Title</th>
+          <th>Average Rating</th>
+          <th>Number of Ratings</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for movie in movies %}
+        <tr>
+          <td><a href="{% url 'view_movie' movie.id %}">{{ movie.title }}</a></td>
+          <td>{{ movie.avg_rating }}</td>
+          <td>{{ movie.total_ratings }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    {% bootstrap_pagination page_obj %}
+
+{% endblock %}

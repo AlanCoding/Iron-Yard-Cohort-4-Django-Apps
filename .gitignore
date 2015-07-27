@@ -58,3 +58,5 @@ target/
 
 .direnv/
 .DS_Store
+data/
+fixtures/

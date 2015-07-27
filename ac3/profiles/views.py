@@ -13,11 +13,11 @@ def view_login(request):
             messages.add_message(request, messages.SUCCESS, sometext)
             return redirect('index')
         else:
-            return render(request, "Rater/login.html",
+            return render(request, "profiles/login.html",
                         {"failed": True, "username": username} )
     else:
         user_form = LoginForm()
-        return render(request, "Rater/login.html", {'form':user_form})
+        return render(request, "profiles/login.html", {'form':user_form})
 
 
 def view_logout(request):
@@ -57,5 +57,5 @@ def view_register(request):
                 "Congratulations, {}, on creating your new account! You are now logged in.".format(
                     user.username))
             return redirect('index.html')
-    return render(request, "Rater/register.html", {'user_form': user_form,
+    return render(request, "profiles/register.html", {'user_form': user_form,
                                                    'rater_form': rater_form})

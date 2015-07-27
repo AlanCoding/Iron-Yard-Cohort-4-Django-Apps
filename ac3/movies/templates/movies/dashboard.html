@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+
+{% block content %}
+
+
+{% if request.user.is_authenticated %}
+  <h1>User Dashboard</h1>
+  <p>You have special privledges on this page, {{ request.user.username }}.</p>
+  <p>Menu of options:
+    <ol>
+      <li>Change your account information</li>
+      <li>Change your profile information</li>
+      <li>Edit or remove your reviews</li>
+    </ol>
+  </p>
+
+  <div>
+    <div style="width:40%;float:left;">
+  <h2>Account Information</h2>
+    <form method="POST" action="{% url 'view_dashboard' %}">
+        {% csrf_token %}
+        {% bootstrap_form user_form %}
+      <input type="submit" name="user_edit" value="Edit User Info"/>
+    </form>
+
+  </div><div style="width:40%;float:right;">
+
+  <h2>Profile Information</h2>
+    <form method="POST" action="{% url 'view_dashboard' %}">
+        {% csrf_token %}
+        {% bootstrap_form rater_form %}
+      <input type="submit" name="rater_edit" value="Edit Profile Info"/>
+    </form>
+
+  </div><div style="clear:both"></div>
+  </div>
+
+  <h2>Review History</h2>
+
+
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Delete</th>
+        <th>Edit</th>
+        <th>Movie Title</th>
+        <th>Rating</th>
+        <th>Date</th>
+        <th>Comments</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for rating in user.rater.rating_set.all %}
+      <tr>
+        <td><form method="POST" action="{% url 'view_dashboard' %}" style="display:inline">
+            {% csrf_token %}
+          <input type="hidden" name="rating" value="{{ rating.id }}">
+          <button type="submit" name="delete_button" value="Delete">
+            <span  class="glyphicon glyphicon-remove"></span>
+          </button>
+        </form></td>
+        <td>
+          <a class="glyphicon glyphicon-edit" href="{% url 'view_rating' rating.id %}"></a>
+        </td>
+        <td><a href="{% url 'view_movie' rating.movie.id %}">{{ rating.movie.title }}</a></td>
+        <td>{{ rating.get_rating_display }}</td>
+        <td>{{ rating.print_date }}</td>
+        <td>{{ rating.review }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+
+{% else %}
+  <p>You must be logged in to edit your account</p>
+{% endif %}
+
+{% endblock %}

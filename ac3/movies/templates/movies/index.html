@@ -1,14 +1,16 @@
 {% extends "base.html" %}
-{% load bootstrap3 %}
 
 {% block content %}
 
   <!-- Main jumbotron for a primary marketing message or call to action -->
   <div class="jumbotron">
-    <h1>Alan, Iron Yard, Cohort 4</h1>
-    <p>This site is designed to showcase the Django projects from the Iron Yard
-        in Durham in the Python class during summer 2015. There are 4 main apps
-        that were produced, and these are combined here into a single project.
+    <h1>MovieLens Project</h1>
+    <p>Rate, review, create an account, edit, and delete your old reviews.
+        Make a new account, and do it all over again.
+        The world of movies is your oyster in this website for the Iron Yard's
+        Python class. Broiled in Django, sautéed in bootstraps, and given just
+        a pinch of jQuerry to taste, this will fill you up with 1 million
+        reviews.
     </p>
   </div>
 
@@ -55,6 +57,31 @@
   </div>
 
 
+    <div class="page-header"><h2>View genre pages</h2></div>
+    <div>
+      <p>contains top-rated movies in that genre</p>
+
+
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Genre</th>
+            <th>Number of movies in genre</th>
+            <th>Number of Ratings in genre</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for genre in genres %}
+          <tr>
+            <td><a href="{% url 'view_genre' genre.id %}">{{ genre.text }}</a></td>
+            <td>{{ genre.Nratings_save }}</td>
+            <td>{{ genre.Nmovies_save }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+    </div>
     <p>
       View the <a href="/top20.html">Top 20 rated movies</a>
     </p>
