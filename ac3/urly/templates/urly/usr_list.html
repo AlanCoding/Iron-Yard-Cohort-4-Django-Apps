@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+
+{% block content %}
+
+
+<div class="jumbotron">
+    <h2>Site Users</h2>
+        <p class="lead">Users of this site and links to their profiles.</p>
+</div>
+
+<div class="row marketing">
+
+{% bootstrap_pagination page_obj %}
+
+<table class="table table-striped">
+	<thead>
+		<tr>
+			<th>User</th>
+			<th>Age</th>
+			<th>Gender</th>
+			<th>Bookmarks</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for bmkr in bookmarkers %}
+		<tr>
+			<td><a href="{% url 'bookmarker' bmkr.id %}">
+				{{ bmkr.user.username }}</a></td>
+			<td>{{ bmkr.age }}</td>
+			<td>{{ bmkr.gender }}</td>
+			<td>{{ bmkr.total_bookmarks }}</td>
+		</tr>
+		{% endfor %}
+	</tbody>
+</table>
+
+</div>
+{% bootstrap_pagination page_obj %}
+
+{% endblock %}

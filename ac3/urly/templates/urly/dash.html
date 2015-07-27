@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+
+{% block content %}
+
+<div class="jumbotron">
+    <h2>User Dashboard</h2>
+        <p class="lead">Edit your bookmarks and perform other actions.</p>
+    <p><a class="btn btn-lg btn-success" href="{% url 'view_register' %}">Sign up</a></p>
+</div>
+
+<div class="row marketing">
+{% bootstrap_pagination page_obj %}
+
+<table class="table table-striped">
+	<thead>
+		<tr>
+			<th>URL</th>
+			<th>Date</th>
+			<th>Title</th>
+			<th>Description</th>
+			<th>Clicks</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for bmk in bookmarks %}
+		<tr>
+			<td><a href="{% url 'click' bmk.code %}">
+				{{ bmk.URL }}</a></td>
+			<td>{{ bmk.posted_at }}</td>
+			<td>{{ bmk.title }}</td>
+			<td>{{ bmk.description }}</td>
+			<td>{{ bmk.total_clicks }}</td>
+		</tr>
+		{% endfor %}
+	</tbody>
+</table>
+</div>
+{% bootstrap_pagination page_obj %}
+
+{% endblock %}

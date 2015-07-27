@@ -15,11 +15,23 @@ class ProgBar:
 
 
 class Profile(models.Model):
-	creation_date = models.DateTimeField(auto_now=True)
-	user = models.OneToOneField(User)
+    creation_date = models.DateTimeField(auto_now=True)
+    user = models.OneToOneField(User, null=True)
+    age = models.IntegerField(null=True, default=22)
+    gender_options = (('M', 'Male'), ('F', 'Female'))
+    gender = models.CharField(max_length=1, choices=gender_options, default='M')
 
-	def __str__(self):
-		return str(self.user)
+    def total_bookmarks(self):
+        return len(self.user.bookmark_set.all())
+
+    def total_clicks(self):
+        ict = 0
+        for bmk in self.user.bookmark_set.all():
+            ict += bmk.total_clicks()
+        return ict
+
+    def __str__(self):
+    	return str(self.user)
 
 class Rater(models.Model):
     age = models.IntegerField(default=0, blank=True, null=True)

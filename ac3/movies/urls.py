@@ -22,6 +22,7 @@ from django.conf.urls.static import static
 
 urlpatterns = [
 
+    url(r'^$', movie_views.view_index, name="view_index"),
     url(r'^user.html([\d]+)$', movie_views.UserView.as_view(), name="view_user"),
     url(r'^movie.html(?P<movie_id>\d+)$', movie_views.view_movie, name="view_movie"),
     url(r'^rating.html(?P<rating_id>\d+)$', movie_views.view_rating, name="view_rating"),

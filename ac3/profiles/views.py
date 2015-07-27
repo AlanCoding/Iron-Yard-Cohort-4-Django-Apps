@@ -1,4 +1,7 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect, render_to_response, get_object_or_404
+from django.contrib import messages
+from django.contrib.auth import authenticate, login, logout
+from movies.forms import UserForm, RaterForm, RatingForm, LoginForm
 
 # Create your views here.
 
@@ -25,7 +28,7 @@ def view_logout(request):
     sometext = "You have sucessfully logged out. Bye."
     messages.add_message(request, messages.SUCCESS, sometext)
     logout(request)
-    return redirect('index.html')
+    return redirect('/')
 #    return redirect(reverse('index_view'))
 
 
@@ -56,6 +59,6 @@ def view_register(request):
                 messages.SUCCESS,
                 "Congratulations, {}, on creating your new account! You are now logged in.".format(
                     user.username))
-            return redirect('index.html')
+            return redirect('/')
     return render(request, "profiles/register.html", {'user_form': user_form,
                                                    'rater_form': rater_form})

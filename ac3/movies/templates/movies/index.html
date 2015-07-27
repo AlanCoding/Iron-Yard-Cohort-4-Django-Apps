@@ -73,7 +73,7 @@
         <tbody>
           {% for genre in genres %}
           <tr>
-            <td><a href="{% url 'view_genre' genre.id %}">{{ genre.text }}</a></td>
+            <td><a href="{% url 'view_genre' genre_id=genre.id %}">{{ genre.text }}</a></td>
             <td>{{ genre.Nratings_save }}</td>
             <td>{{ genre.Nmovies_save }}</td>
           </tr>

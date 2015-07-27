@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+
+{% block content %}
+
+<div class="jumbotron">
+    <h2>Bookmark</h2>
+        <p class="lead">{{ bookmark.title }}</p>
+        <p class="lead">{{ bookmark.URL }}</p>
+        <p class="lead">{{ bookmark.description }}</p>
+</div>
+
+<div class="row marketing">
+
+<div class="col-lg-6">
+  Bookmark info
+  <ul>
+    <li>Title: {{ bookmark.title }}</li>
+    <li>url: {{ bookmark.url }}</li>
+    <li>Posted at: {{ bookmark.posted_at }}</li>
+  </ul>
+</div>
+
+
+</div>
+
+<h2>Click History</h2>
+
+<table class="table table-striped">
+	<thead>
+		<tr>
+			<th>Time Clicked</th>
+			<th>By User</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for c in clicks %}
+		<tr>
+			<td>{{ c.clicked_at }}</td>
+            {% if c.user %}
+			<td><a href="{% url 'bookmarker' c.user.bookmarker.id %}">{{ c.user }}</a></td>
+            {% endif %}
+		</tr>
+		{% endfor %}
+	</tbody>
+</table>
+
+<!-- </div> -->
+
+{% endblock %}

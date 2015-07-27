@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+
+{% block content %}
+
+<div class="jumbotron">
+    <h2>{{ bookmarker.user.username }}</h2>
+        <p class="lead">User Page</p>
+</div>
+
+<div class="row marketing">
+
+<div class="row">
+<div class="col-lg-6">
+	<p>User stats</p>
+	<ul>
+		<li>Bookmarks: {{ bookmarker.total_bookmarks }}</li>
+		<li>Clicks generated: {{ bookmarker.total_clicks }}</li>
+	</ul>
+</div>
+
+<div class="col-lg-6">
+	<p>Demographics</p>
+	<ul>
+		<li>Age: {{ bookmarker.age }}</li>
+		<li>Gender: {{ bookmarker.gender }}</li>
+	</ul>
+</div>
+</div>
+
+{% bootstrap_pagination page_obj %}
+<table class="table table-striped">
+	<thead>
+		<tr>
+			<th>URL/Title/Description</th>
+			<th>Date</th>
+			<th>Clicks</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for bmk in bookmarks %}
+		<tr>
+			<td>
+				<table class="table-condensed">
+					<tr><td>
+						<a href="{% url 'click' bmk.code %}">{{ bmk.print_url }}</a>
+					</td></tr><tr><td>
+						{{ bmk.title }}
+					</td></tr><tr><td>
+						&nbsp;&nbsp;&nbsp;{{ bmk.description }}
+					</td></tr>
+				</table>
+			</td>
+			<td>{{ bmk.posted_at|date:"M d, Y" }}<br />
+				{{ bmk.posted_at|time }}	</td>
+			<!-- <td></td>
+			<td></td> -->
+			<td>{{ bmk.total_clicks }}</td>
+		</tr>
+		{% endfor %}
+	</tbody>
+</table>
+</div>
+{% bootstrap_pagination page_obj %}
+
+{% endblock %}

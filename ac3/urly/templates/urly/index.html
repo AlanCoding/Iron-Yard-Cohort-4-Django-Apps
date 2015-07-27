@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+
+{% block content %}
+
+<div class="jumbotron">
+    <h2>URLy Bird</h2>
+        <p class="lead">Enter your URL into the box below and hit enter.
+            You will recieve a shorter URL that directs you to the site.
+            Get the worm before some else does. Don't be late. Be URLy.</p>
+    <p><a class="btn btn-lg btn-success" href="{% url 'view_register' %}">Sign up</a></p>
+</div>
+
+<div class="row marketing">
+
+<div class="col-lg-12">
+  <h4>Post a Bookmark</h4>
+  <p>
+    <form method="POST" action="{% url 'view_index' %}">
+        {% csrf_token %}
+        {% bootstrap_form form %}
+        <input type="submit" name="submit" value="Add This Bookmark!"/>
+    </form>
+  </p>
+</div>
+
+<div class="col-lg-6">
+    <h4>Site Navigation</h4>
+    <p>Each user and bookmark has their own details page.
+        Each bookmark also has a "redirect" page.
+    </p>
+    <p><ul>
+    <li><a href="{% url 'bmk_list' %}">Bookmark list</a></li>
+    <li><a href="{% url 'usr_list' %}">User list</a></li>
+</ul>
+</p>
+</div>
+
+<div class="col-lg-6">
+  <h4>About</h4>
+  <p>Bird is the word! This site is great for collecting bookmarks
+        and putting them into smaller URLs to tweet. You can make
+        and account and even track the clicks of the link. Race
+        to be the top click-generator on the site.</p>
+</div>
+
+<div class="col-lg-6">
+  <h4>Project</h4>
+  <p>Web site made for the Python Engineering class, Iron Yard in Durham, NC.</p>
+  <p>Important skills used:</p>
+  <ul>
+      <li>Class-based views in Django</li>
+      <li>Django REST API Framework</li>
+</div>
+
+
+</div>
+{% endblock %}
