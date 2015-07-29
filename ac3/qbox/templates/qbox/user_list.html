@@ -1,0 +1,40 @@
+{% extends "qbox/base.html" %}
+{% load bootstrap3 %}
+
+{% block content %}
+
+<div class="jumbotron">
+    <h2>User List</h2>
+    <p class="lead">Users of this site</p>
+</div>
+
+<div class="row marketing">
+
+{% bootstrap_pagination page_obj %}
+
+<table class="table table-striped">
+	<thead>
+		<tr>
+			<th>Username</th>
+			<th>Score</th>
+			<th>Questions</th>
+            <th>Answers</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for uz in users %}
+		<tr>
+			<td><a href="{% url 'view_user' uz.id %}">{{ uz.username }}</a></td>
+			<td>{{ uz.print_score }}</td>
+			<td>{{ uz.question_set.count }}</td>
+            <td>{{ uz.answer_set.count }}</td>
+		</tr>
+		{% endfor %}
+	</tbody>
+</table>
+</div>
+
+
+{% bootstrap_pagination page_obj %}
+
+{% endblock %}

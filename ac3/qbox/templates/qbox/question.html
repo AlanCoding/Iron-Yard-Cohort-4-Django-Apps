@@ -1,0 +1,152 @@
+{% extends "qbox/base.html" %}
+{% load bootstrap3 %}
+
+{% block content %}
+
+<div class="jumbotron">
+    <h3>
+        <div style="
+            border-radius: 50%; width: 50px; height: 60px; padding: 8px;
+            background: #fff; border: 2px solid black; color: black;
+            text-align: center; font: 32px Arial, sans-serif;
+            display: inline-block;">
+        {{ question.balance }}
+        </div>
+        {% if question.show %}
+        <a href="{% url 'question_upvote' question.id %}"><span class="glyphicon glyphicon-arrow-up"></span></a>
+        <a href="{% url 'question_downvote' question.id %}"><span class="glyphicon glyphicon-arrow-down"></span></a>
+        {% endif %}
+        {{ question.title }}</h3>
+    <p class="lead">{{ question.text }}</p>
+    <p class="pull-right">asked by: <a href="{% url 'view_user' question.owner.id %}">{{ question.owner.username }}</a></p>
+</div>
+
+<p> <a href="{% url 'add_tag' question.id %}">Add tags on this question</a> </p>
+<p> Existing tags on this question:</p>
+<ul>
+    {% for tag in question.tag.all %}
+    <li><a href="{% url 'view_tag' tag.id %}">{{ tag.text }}</a></li>
+    {% endfor %}
+</ul>
+
+{% for comment in question.comment.all %}
+<div class="row marketing">
+    <div class="col-md-2">
+        {{ comment.balance }}
+        {% if comment.show %}
+        &nbsp;&nbsp;&nbsp;
+        <a href="{% url 'question_comment_upvote' comment.id %}"><span class="glyphicon glyphicon-thumbs-up"></span></a>
+        {% endif %}
+    </div>
+    <div class="col-md-8">
+        {{ comment.text }}
+    </div>
+    <div class="col-md-2">
+        <a href="{% url 'view_user' comment.owner.id %}">{{ comment.owner }}</a>
+    </div>
+</div>
+{% endfor %}
+
+<div class="row marketing">
+
+    <div class="col-md-4">
+        <h4>Leave a Comment</h4>
+    </div>
+    <div class="col-md-8">
+        <form method="POST" action="{% url 'show_question' pk=question.id %}">
+            {% csrf_token %}
+            {% bootstrap_form question_comment %}
+        <input type="submit" name="question_comment" value="Comment on this question"/>
+        </form>
+     </div>
+</div>
+
+<h2>Answer this Question</h2>
+<form method="POST" action="{% url 'show_question' question.id %}">
+    {% csrf_token %}
+    {% bootstrap_form answer_form %}
+<input type="submit" name="answer_form" value="Leave this answer"/>
+</form>
+
+
+<div class="row marketing">
+
+{% bootstrap_pagination page_obj %}
+
+<table class="table table-striped">
+	<thead>
+		<tr>
+			<th>Vote Balance</th>
+			<th>Answer \<br />
+                Comments</th>
+		</tr>
+	</thead>
+	<tbody>
+{#		{% for ans in question.answer_set.all %} #}
+        {% for xi in answer_comments %}
+        {% with ans=xi.ans %}
+        {% with ac_form=xi.form %}
+		<tr>
+			<td>
+                <div style="
+                    border-radius: 50%; width: 50px; height: 60px; padding: 8px;
+                    background: #ddf; border: 2px solid black; color: black;
+                    text-align: center; font: 32px Arial, sans-serif;
+                    display: inline-block;">
+                {{ ans.balance }}
+                </div>
+                {% if ans.show %}
+                <a href="{% url 'answer_upvote' ans.id %}">
+                    <span class="glyphicon glyphicon-chevron-up"></span></a>
+                <a href="{% url 'answer_downvote' ans.id %}">
+                    <span class="glyphicon glyphicon-chevron-down"></span></a>
+                {% endif %}
+
+            </td>
+			<td>{{ ans.text }} <br />
+                <p class="pull-right">
+                    <a href="{% url 'view_user' ans.owner.id %}">
+                    {{ ans.owner.username }}</a></p>
+                <hr />
+
+                {% for comment in ans.comment.all %}
+                <div class="row marketing">
+                    <div class="col-md-2">
+                        {{ comment.balance }}
+                        {% if comment.show %}
+                        &nbsp;&nbsp;&nbsp;
+                        <a href="{% url 'answer_comment_upvote' comment.id %}">
+                            <span class="glyphicon glyphicon-thumbs-up"></span></a>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-8">
+                        {{ comment.text }}
+                    </div>
+                    <div class="col-md-2">
+                        <a href="{% url 'view_user' comment.owner.id %}">
+                            {{ comment.owner }}</a>
+                    </div>
+                </div>
+                {% endfor %}
+
+                <form method="POST" action="{% url 'show_question' question.id %}">
+                    {% csrf_token %}
+                    {% bootstrap_form ac_form %}
+                <input type="submit" name="answer_comment{{ ans.id }}" value="Comment on answer"/>
+                </form>
+            </td>
+		</tr>
+
+
+        {% endwith %}
+        {% endwith %}
+		{% endfor %}
+        </td>
+	</tbody>
+</table>
+</div>
+
+
+{% bootstrap_pagination page_obj %}
+
+{% endblock %}

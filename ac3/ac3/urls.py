@@ -22,6 +22,6 @@ urlpatterns = [
     url(r'^$', TemplateView.as_view(template_name="index.html"), name="view_main_index"),
     url(r'^', include('profiles.urls')),
     url(r'^movies/', include('movies.urls')),
-    # url(r'^qbox/', include('qbox.urls')),
+    url(r'^qbox/', include('qbox.urls')),
     url(r'^urly/', include('urly.urls')),
 ]
