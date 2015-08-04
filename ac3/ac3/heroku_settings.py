@@ -1,7 +1,7 @@
 from .settings import *
 import os
 
-DEBUG = False
+# DEBUG = False
 SECRET_KEY = os.environ['SECRET_KEY']
 
 # Parse database configuration from $DATABASE_URL

@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "movies/base.html" %}
 
 {% block content %}
 
@@ -32,19 +32,19 @@
     <div class="col-sm-4">
       <div class="page-header"><h2>View some users</h2></div>
       <ul>
-        <li><a href="/user.html1">User number 1</a></li>
-        <li><a href="/user.html10">User number 10</a></li>
-        <li><a href="/user.html100">User number 100</a></li>
-        <li><a href="/user.html111">User number 111</a></li>
-        <li><a href="/user.html6044">Clinton's page</a></li>
+        <li><a href="{% url 'view_rater' rater_id=1 %}">User number 1</a></li>
+        <li><a href="{% url 'view_rater' rater_id=10 %}">User number 10</a></li>
+        <li><a href="{% url 'view_rater' rater_id=100 %}">User number 100</a></li>
+        <li><a href="{% url 'view_rater' rater_id=111 %}">User number 111</a></li>
+        <li><a href="{% url 'view_rater' rater_id=6040 %}">User number 6040</a></li>
       </ul>
     </div><div class="col-sm-4">
     <div class="page-header"><h2>View some movies</h2></div>
       <ul>
-        <li><a href="/movie.html2987">Who Framed Roger Rabbit</a></li>
-        <li><a href="/movie.html3421">Animal House</a></li>
-        <li><a href="/movie.html2124">The Addams Family</a></li>
-        <li><a href="/movie.html2554">Children of the Damned</a></li>
+        <li><a href="{% url 'view_movie' movie_id=2987 %}">Who Framed Roger Rabbit</a></li>
+        <li><a href="{% url 'view_movie' movie_id=3421 %}">Animal House</a></li>
+        <li><a href="{% url 'view_movie' movie_id=2124 %}">The Addams Family</a></li>
+        <li><a href="{% url 'view_movie' movie_id=2554 %}">Children of the Damned</a></li>
       </ul>
     </div><div class="col-sm-4">
     <div class="page-header"><h2>View some genres</h2></div>

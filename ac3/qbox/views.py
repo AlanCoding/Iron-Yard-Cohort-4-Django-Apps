@@ -7,6 +7,7 @@ from qbox.models import Question, Answer, Tag, AnswerComment, QuestionComment, \
     QuestionUpvote, AnswerUpvote, QuestionDownvote, AnswerDownvote, \
     AnswerCommentUpvote, QuestionCommentUpvote
 import qbox.forms as QA_forms
+from django.contrib.auth.models import User
 
 
 class QuestionUpvoteView(django_views.RedirectView):
@@ -282,3 +283,51 @@ class TagDetailView(django_views.ListView):
 
     def get_queryset(self):
         return self.tag.question_set.order_by('-posted_at')
+
+# Profile related views
+class UserDetailView(django_views.DetailView):
+    model = User
+    template_name = 'qbox/user_detail.html'
+    context_object_name = 'answers'
+    the_user = None
+
+    def dispatch(self, *args, **kwargs):
+        self.the_user = User.objects.get(pk=kwargs['pk'])
+        return super(UserDetailView, self).dispatch(*args, **kwargs)
+
+    def get_queryset(self):
+        return User.objects.select_related()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["answers"] = self.the_user.answer_set.all()
+        context["questions"] = self.the_user.question_set.all()
+        context["user"] = self.the_user
+        context["score"] = (
+            sum(num.score() for num in self.the_user.answer_set.all()) +
+            (self.the_user.question_set.count() * 5) +
+            (self.the_user.answerdownvote_set.count() * -1)
+        )
+
+        return context
+
+
+class UserListView(django_views.ListView):
+    model=User
+    template_name='qbox/user_list.html'
+    context_object_name='users'
+    paginate_by=30
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(UserListView, self).get_context_data(**kwargs)
+        # print(context)
+        for i in range(len(context['users'])):
+            usr = context['users'][i]
+            context['users'][i].print_score = (
+                sum(num.score() for num in usr.answer_set.all()) +
+                (usr.question_set.count() * 5) +
+                (usr.answerdownvote_set.count() * -1)
+            )
+        context['users'] = sorted(context['users'],
+                    key=operator.attrgetter('print_score'), reverse=True)
+        return context

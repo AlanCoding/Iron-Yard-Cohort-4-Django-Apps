@@ -113,10 +113,13 @@ class BookmarkerView(views.ListView):
     paginate_by = 20
     context_object_name = 'bookmarks'
     profile = None
+    user = None
 
     def dispatch(self, *args, **kwargs):
         if 'user_id' in self.kwargs:
-            self.profile = Profile.objects.get(pk=self.kwargs['user_id'])
+            self.user = User.objects.get(pk=self.kwargs['user_id'])
+            self.profile = self.user.profile
+            # self.profile = Profile.objects.get(pk=self.kwargs['user_id'])
         else:
             self.profile = self.request.user.profile
         return super(BookmarkerView, self).dispatch(*args, **kwargs)
@@ -135,7 +138,7 @@ class IndexPageView(views.CreateView):
     model = Bookmark
     # fields = ['URL', 'title', 'description']
     form_class = BookmarkForm
-    success_url = 'urly/index.html'
+    success_url = '/urly/index.html'
 
     def form_valid(self, form):
         timezone.activate(settings.TIME_ZONE)

@@ -40,5 +40,7 @@ urlpatterns = [
                                         name='question_upvote'),
     url(r'^ACupvote/(?P<pk>\d+)', views.AnswerCommentUpvoteView.as_view(),
                                         name='answer_comment_upvote'),
-
+    # profile related views
+    url(r'^u/(?P<pk>\d+)', views.UserDetailView.as_view(), name='qbox_view_user'),
+    url(r'^users/$', views.UserListView.as_view(), name='qbox_view_users'),
 ]

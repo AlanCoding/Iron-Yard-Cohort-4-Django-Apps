@@ -52,14 +52,14 @@ urlpatterns = [
     url(r'^b/(?P<code>\w+)$', v.BookmarkView.as_view(), name='bookmark'),
     url(r'^bmk_list.html$', ListView.as_view(
                     model=m.Bookmark,
-                    template_name="lists/bmk_list.html",
+                    template_name="urly/bmk_list.html",
                     context_object_name='bookmarks',
                     paginate_by=10
                     ), name='bmk_list'),
 
     url(r'^usr_list.html$', ListView.as_view(
                     model=Profile,
-                    template_name="lists/usr_list.html",
+                    template_name="urly/usr_list.html",
                     context_object_name='bookmarkers',
                     paginate_by=10
                     ), name='usr_list'),

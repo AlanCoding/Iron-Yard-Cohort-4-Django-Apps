@@ -167,7 +167,7 @@ class UserView(ListView):
     rater = None
 
     def get_queryset(self):
-        self.rater = get_object_or_404(Rater, pk=self.args[0])
+        self.rater = get_object_or_404(Rater, pk=self.kwargs['rater_id'])
         rs = self.rater.rating_set.order_by('-posted')
         return rs
 
