@@ -29,7 +29,7 @@
 			<td>{{ qu.answer_set.count }}</td>
 			<td><a href="{% url 'show_question' qu.id %}">
 				{{ qu.title }}</a></td>
-            <td><a href="{% url 'view_user' qu.owner.id %}">{{ qu.owner.username }}</a></td>
+            <td><a href="{% url 'qbox_view_user' qu.owner.id %}">{{ qu.owner.username }}</a></td>
 		</tr>
 		{% endfor %}
 	</tbody>

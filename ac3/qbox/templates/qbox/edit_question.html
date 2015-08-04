@@ -5,7 +5,7 @@
     <div class="jumbotron">
         <h2>{{ question.title }}</h2>
         <p class="lead">{{ question.text }}</p>
-        <p class="pull-right">asked by: <a href="{% url 'view_user' question.owner.id %}">{{ question.owner.username }}</a></p>
+        <p class="pull-right">asked by: <a href="{% url 'qbox_view_user' question.owner.id %}">{{ question.owner.username }}</a></p>
     </div>
 
     <p> Existing tags on this question:</p>
