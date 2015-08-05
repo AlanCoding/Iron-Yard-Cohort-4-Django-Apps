@@ -8,7 +8,8 @@
   <link rel="shortcut icon" href="{% static 'favicon.ico' %}"/>
   {% bootstrap_css %}
   {% bootstrap_javascript %}
-  <link rel="stylesheet" href="{% static 'style.css' %}"/>
+  <!-- <link rel="stylesheet" href="{% static 'style.css' %}"/> -->
+  <link rel="stylesheet" href="{% static 'justified-nav.css' %}"/>
   <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Alan's Iron Yard apps</title>
 </head>
@@ -16,10 +17,28 @@
 
 
 
-<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+<!-- <nav class="navbar navbar-default navbar-fixed-top" role="navigation"> -->
   <div class="container">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+    <div class="masthead">
+      <h3 class="text-muted">Alan's App Portfolio</h3>
+      <nav>
+        <ul class="nav nav-justified">
+          <li class="active"><a href="/">Home</a></li>
+          <li><a href="/">User List</a></li>
+          <li><a href="/">About Alan</a></li>
+          {% if request.user.is_authenticated %}
+            <li><a href="user.html{{ request.user.rater.id }}">User: {{ request.user.username }}</a></li>
+            <li><a href="{% url 'view_logout' %}">log out</a></li>
+          {% else %}
+            <li><a href="{% url 'view_login' %}">Log in</a></li>
+            <li><a href="{% url 'view_register' %}">Register</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+    </div>
+  </div>
+
+      <!-- <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
         <span class="sr-only">Toggle navigation</span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
@@ -58,10 +77,11 @@
         {% endif %}
       </ul>
 
-    </div><!--/.nav-collapse -->
-  </div>
-</nav>
+    </div>
+  </div> -->
+<!-- </nav> -->
 
+{{ request.get_path }}
 
 <div class="container theme-showcase" role="main">
 

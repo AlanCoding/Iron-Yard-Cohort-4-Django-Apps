@@ -8,16 +8,10 @@
     <h1>Alan, Iron Yard, Cohort 4</h1>
     <p>This site is designed to showcase the Django projects from the Iron Yard
         in Durham in the Python class during summer 2015. There are 4 main apps
-        that were produced, and these are combined here into a single project.
+        that were produced, and these are combined here into a single project
+        with a single user account system.
     </p>
   </div>
-
-  <p>After finishing the Iron Yard course, I thought it would be nice to
-      consolidate all the Django apps we made into a single one and get a
-      nice-looking domain name for it as well. Running 5 different heroku
-      apps at the same time is not ideal either.</p>
-
-
 
   <div class="row">
     <div class="col-sm-4">
@@ -25,18 +19,18 @@
       <p>You can make an account on this site to rate movies, but it also has
         data taken from the MovieLens project pre-loaded into it, including
         1 million reviews.</p>
-      <ul>
-        <li><a href="movies/">go to Movies app</a></li>
-        <li><a href="https://github.com/AlanCoding/django-movies">Original Repo</a></li>
-      </ul>
-    </div><div class="col-sm-4">
+    <p><a class="btn btn-primary" href="/movies"
+                        role="button">Go to Movies App &raquo;</a></p>
+    <p><a class="btn btn-info" href="https://github.com/AlanCoding/django-movies"
+                        role="button">Github Movies Repo &raquo;</a></p>
+  </div><div class="col-lg-4">
       <div class="page-header"><h2>URLy Bird</h2></div>
       <p>This is a URL shortener that creates a hash when a user submits a link.
         It also counts the clicks on the link and gives stats for different users.</p>
-      <ul>
-        <li><a href="/urly/index.html">go to URLy Bird app</a></li>
-        <li><a href="https://github.com/AlanCoding/urly-bird">Original Repo</a></li>
-      </ul>
+    <p><a class="btn btn-primary" href="/urly/index.html"
+                        role="button">Go to URLy Bird &raquo;</a></p>
+    <p><a class="btn btn-info" href="https://github.com/AlanCoding/urly-bird"
+                        role="button">Github URLy Bird &raquo;</a></p>
     </div>
 
     <div class="col-sm-4">
@@ -44,11 +38,21 @@
       <p>Clone of Stack Overflow. This was a group project with 2 people, and also
       one of my best products from the class. It gives a single-page view of a
         question that allows comments on the question and on the answers.</p>
-      <ul>
-        <li><a href="qbox/">go to Questions Box</a></li>
-        <li><a href="https://github.com/bdeshaz/questions-box">Original Repo</a></li>
-      </ul>
+    <p><a class="btn btn-primary" href="/qbox/"
+                        role="button">Go to Questions Box &raquo;</a></p>
+    <p><a class="btn btn-info" href="https://github.com/bdeshaz/questions-box"
+                        role="button">Github qbox repo &raquo;</a></p>
     </div>
+
+</div>
+      <div class="row">
+    <p>After finishing the Iron Yard course, I thought it would be nice to
+        consolidate all the Django apps we made into a single app and get a
+        nice-looking domain name for it as well. The only additional challenge
+        is making a user account system that is consistent accross the
+        different apps as well. There are some other projects from the code
+        school I would like to add as well, but I don't yet have all the
+        materials for these together.</p>
 
     <div class="col-sm-4">
       <div class="page-header"><h2>Clickinator</h2></div>
