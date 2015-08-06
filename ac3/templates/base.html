@@ -28,7 +28,7 @@
           <li class="{% navactive request 'view_users' %}"><a href="{% url 'view_users' %}">User List</a></li>
           <li class="{% navactive request 'view_alan' %}"><a href="{% url 'view_alan' %}">About Alan</a></li>
           {% if request.user.is_authenticated %}
-            <li><a href="user.html{{ request.user.rater.id }}">User: {{ request.user.username }}</a></li>
+            <li class="{% navactive request 'view_user' request.user.pk %}"><a href="{% url 'view_user' request.user.pk %}">User: {{ request.user.username }}</a></li>
             <li><a href="{% url 'view_logout' %}">log out</a></li>
           {% else %}
             <li class="{% navactive request 'view_login' %}"><a href="{% url 'view_login' %}">Log in</a></li>

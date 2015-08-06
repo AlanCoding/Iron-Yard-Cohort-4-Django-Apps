@@ -2,9 +2,9 @@ from django.shortcuts import render, redirect, render_to_response, get_object_or
 from django.contrib import messages
 import django.views.generic as django_views
 from django.contrib.auth import authenticate, login, logout
-from movies.forms import UserForm, RaterForm, RatingForm, LoginForm
+from movies.forms import RaterForm
 from django.contrib.auth.decorators import login_required
-from profiles.forms import ProfileForm
+from profiles.forms import ProfileForm, LoginForm, UserForm
 from django.contrib.auth.models import User
 
 # Create your views here.
@@ -102,3 +102,34 @@ class ListUsersView(django_views.ListView):
     template_name = "user_list.html"
     context_object_name='users'
     paginate_by=30
+
+
+class UserDetailView(django_views.DetailView):
+    model = User
+    template_name = 'user_detail.html'
+    context_object_name = 'this_user'
+    the_user = None
+
+    def dispatch(self, *args, **kwargs):
+        self.the_user = User.objects.get(pk=kwargs['pk'])
+        return super(UserDetailView, self).dispatch(*args, **kwargs)
+
+    def get_queryset(self):
+        return User.objects.select_related()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["answers"] = self.the_user.answer_set.all()
+        context["questions"] = self.the_user.question_set.all()
+        context["user"] = self.the_user
+        context["score"] = (
+            sum(num.score() for num in self.the_user.answer_set.all()) +
+            (self.the_user.question_set.count() * 5) +
+            (self.the_user.answerdownvote_set.count() * -1)
+        )
+        if self.the_user == self.request.user:
+            context["is_self"] = True
+        else:
+            context["is_self"] = False
+
+        return context

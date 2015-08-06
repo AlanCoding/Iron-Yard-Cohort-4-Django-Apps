@@ -29,7 +29,8 @@
         {% if usr.rater %}
         {% if usr.profile %}
 		<tr>
-			<td>{{ usr.username }}</td>
+			<td><a href="{% url 'view_user' usr.pk %}">
+                {{ usr.username }}</a></td>
 			<td>{% if usr.rater %}
                 <a href="{% url 'view_rater' rater_id=usr.rater.pk %}">
                 {{ usr.rater.rating_count }}</a>

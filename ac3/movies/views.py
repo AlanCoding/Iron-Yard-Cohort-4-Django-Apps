@@ -13,7 +13,8 @@ from django.views.generic import View, RedirectView, ListView
 from django.http import HttpResponse
 
 # Create your views here.
-from movies.forms import UserForm, RaterForm, RatingForm, LoginForm
+from movies.forms import RaterForm, RatingForm
+from profiles.forms import UserForm
 import datetime
 
 
