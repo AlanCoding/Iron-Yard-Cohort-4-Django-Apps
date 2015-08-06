@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load bootstrap3 %}
+
+{% block content %}
+
+<link rel="stylesheet" href="{% static 'css/one-page-wonder.css' %}"/>
+
+<!-- <h2>Alan Rominger</h2>
+<h3>More portfolio items and links</h3> -->
+
+    <!-- Full Width Image Header -->
+    <header class="header-image">
+        <div class="headline">
+            <div class="container">
+                <h1>Alan Rominger</h1>
+                <h2>More portfolio items and links</h2>
+            </div>
+        </div>
+    </header>
+
+    <hr class="featurette-divider">
+
+        <!-- First Featurette -->
+        <div class="featurette" id="about">
+            <a href="http://physics.stackexchange.com/users/1255/alan-rominger"><img class="featurette-image img-circle img-responsive pull-right" src="{% static 'alan/physics.PNG' %}"></a>
+            <h2 class="featurette-heading">Physics Stack Exchange
+                <span class="text-muted">Contrbutions to Q and A</span>
+            </h2>
+            <p class="lead">I have greately enjoyed contributing to the physics community through this
+                outlet, and learned lots about the Stack Exchange networks as well.</p>
+        </div>
+
+<h4>Physics Stack Exchange</h4>
+
+<p>I have greately enjoyed contributing to the physics community through this
+    outlet, and learned lots about the Stack Exchange networks as well.</p>
+
+
+{% if is_paginated %}
+{% bootstrap_pagination page_obj %}
+{% endif %}
+
+{% endblock %}
