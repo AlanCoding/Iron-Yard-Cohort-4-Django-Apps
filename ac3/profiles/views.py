@@ -1,9 +1,11 @@
 from django.shortcuts import render, redirect, render_to_response, get_object_or_404
 from django.contrib import messages
+import django.views.generic as django_views
 from django.contrib.auth import authenticate, login, logout
 from movies.forms import UserForm, RaterForm, RatingForm, LoginForm
 from django.contrib.auth.decorators import login_required
 from profiles.forms import ProfileForm
+from django.contrib.auth.models import User
 
 # Create your views here.
 
@@ -93,3 +95,10 @@ def edit_user(request):
             return redirect('/')
 
     return render(request, "profiles/edit_user.html", {"form": user_form})
+
+
+class ListUsersView(django_views.ListView):
+    model = User
+    template_name = "user_list.html"
+    context_object_name='users'
+    paginate_by=30

@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+
+{% block content %}
+
+
+<div class="jumbotron">
+    <h2>Site Users</h2>
+        <p class="lead">Users of this site with data about their specific app usage.</p>
+</div>
+
+<div class="row marketing">
+
+{% if is_paginated %}
+    {% bootstrap_pagination page_obj %}
+{% endif %}
+
+<table class="table table-striped">
+	<thead>
+		<tr>
+			<th>username</th>
+			<th>Movie Ratings</th>
+			<th>Links</th>
+			<th>Questions</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for usr in users %}
+		<tr>
+			<td>{{ usr.username }}</td>
+			<td>{% if usr.rater %}
+                <a href="{% url 'view_rater' rater_id=usr.rater.pk %}">
+                {{ usr.rater.rating_count }}</a>
+            {% endif %}</td>
+			<td><a href="{% url 'bookmarker' user_id=usr.pk %}">
+                {{ usr.profile.total_bookmarks }}</a></td>
+			<td><a href="{% url 'qbox_view_user' pk=usr.pk %}">
+                {{ usr.question_set.count }}</a></td>
+		</tr>
+		{% endfor %}
+	</tbody>
+</table>
+
+</div>
+
+{% if is_paginated %}
+{% bootstrap_pagination page_obj %}
+{% endif %}
+
+{% endblock %}

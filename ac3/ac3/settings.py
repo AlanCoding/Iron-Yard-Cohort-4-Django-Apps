@@ -39,6 +39,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django_filters',
     'rest_framework',
+    'ac3',
     'profiles',
     'movies',
     'qbox',
@@ -74,6 +75,10 @@ TEMPLATES = [
         },
     },
 ]
+
+TEMPLATE_CONTEXT_PROCESSORS = (
+    'django.core.context_processors.request',
+)
 
 WSGI_APPLICATION = 'ac3.wsgi.application'
 
