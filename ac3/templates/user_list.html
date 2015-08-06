@@ -26,6 +26,8 @@
 	</thead>
 	<tbody>
 		{% for usr in users %}
+        {% if usr.rater %}
+        {% if usr.profile %}
 		<tr>
 			<td>{{ usr.username }}</td>
 			<td>{% if usr.rater %}
@@ -37,6 +39,8 @@
 			<td><a href="{% url 'qbox_view_user' pk=usr.pk %}">
                 {{ usr.question_set.count }}</a></td>
 		</tr>
+        {% endif %}
+        {% endif %}
 		{% endfor %}
 	</tbody>
 </table>
