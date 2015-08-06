@@ -1,5 +1,6 @@
 {% load staticfiles %}
 {% load bootstrap3 %}
+{% load base_extras %}
 <!DOCTYPE html>
 <html>
 <head lang="en">
@@ -27,10 +28,10 @@
     <nav>
       <ul class="nav nav-pills pull-left">
         <li><h3 class="text-muted">Question Box</h3></li>
-        <li role="presentation"><a href="{% url 'view_questions' %}">Questions</a></li>
-{#        <li role="presentation"><a href="{% url 'qbox_view_users' %}">Users</a></li> #}
-        <li role="presentation"><a href="{% url 'view_tags' %}">Tags</a></li>
-        <li role="presentation"><a href="{% url 'ask_question' %}">Ask</a></li>
+        <li role="presentation" class="{% navactive request 'view_questions' %}"><a href="{% url 'view_questions' %}">Questions</a></li>
+        <li role="presentation" class="{% navactive request 'qbox_view_users' %}"><a href="{% url 'qbox_view_users' %}">Users</a></li>
+        <li role="presentation" class="{% navactive request 'view_tags' %}"><a href="{% url 'view_tags' %}">Tags</a></li>
+        <li role="presentation" class="{% navactive request 'ask_question' %}"><a href="{% url 'ask_question' %}">Ask</a></li>
       </ul>
       <ul class="nav nav-pills pull-right">
 

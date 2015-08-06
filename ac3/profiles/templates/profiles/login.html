@@ -15,9 +15,10 @@
     <p>Please login to see this page.</p>
     {% endif %}
 {% endif %}
+<p>&nbsp;</p>
 <center>
 <div style="position:relative;width:50%;">
-<form method="post" action="{% url 'django.contrib.auth.views.login' %}">
+<form method="post" action="{% url 'view_login' %}">
 {% csrf_token %}
 {% bootstrap_form form %}
 <input type="submit" value="login" />
@@ -25,8 +26,5 @@
 </form>
 </div>
 </center>
-
-{# Assumes you setup the password_reset view in your URLconf #}
-<p><a href="{% url 'password_reset' %}">Lost password?</a></p>
 
 {% endblock %}

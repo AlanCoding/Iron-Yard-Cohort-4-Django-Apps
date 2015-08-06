@@ -8,6 +8,7 @@ from qbox.models import Question, Answer, Tag, AnswerComment, QuestionComment, \
     AnswerCommentUpvote, QuestionCommentUpvote
 import qbox.forms as QA_forms
 from django.contrib.auth.models import User
+import operator
 
 
 class QuestionUpvoteView(django_views.RedirectView):

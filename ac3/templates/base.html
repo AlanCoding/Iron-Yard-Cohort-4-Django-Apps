@@ -31,8 +31,8 @@
             <li><a href="user.html{{ request.user.rater.id }}">User: {{ request.user.username }}</a></li>
             <li><a href="{% url 'view_logout' %}">log out</a></li>
           {% else %}
-            <li><a href="{% url 'view_login' %}">Log in</a></li>
-            <li><a href="{% url 'view_register' %}">Register</a></li>
+            <li class="{% navactive request 'view_login' %}"><a href="{% url 'view_login' %}">Log in</a></li>
+            <li class="{% navactive request 'view_register' %}"><a href="{% url 'view_register' %}">Register</a></li>
             {% endif %}
         </ul>
     </nav>
@@ -92,7 +92,7 @@
 
 <footer>
   <center>
-    <strong><br />Movie Review site is for educational purposes</strong>
+    <strong><br />Work for the Iron Yard is open source</strong>
   </center>
   <p>&nbsp;</p>
 </footer>

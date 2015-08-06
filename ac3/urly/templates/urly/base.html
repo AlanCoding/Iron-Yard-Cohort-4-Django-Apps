@@ -1,5 +1,6 @@
 {% load staticfiles %}
 {% load bootstrap3 %}
+{% load base_extras %}
 <!DOCTYPE html>
 <html>
 <head lang="en">
@@ -54,14 +55,14 @@
         </li>
       </ul>
       <ul class="nav nav-pills pull-right">
-          <li role="presentation" class="active"><a href="{% url 'view_index' %}">Index</a></li>
+          <li role="presentation" class="{% navactive request 'view_index' %}"><a href="{% url 'view_index' %}">Index</a></li>
         {% if request.user.is_authenticated %}
           <li role="presentation"><a href="{% url 'bookmarker' request.user.id %}">User: {{ request.user.username }}</a></li>
-          <li role="presentation"><a href="{% url 'dashboard' %}">Dashboard</a></li>
+          <li role="presentation" class="{% navactive request 'dashboard' %}"><a href="{% url 'dashboard' %}">Dashboard</a></li>
           <li role="presentation"><a href="{% url 'view_logout' %}">log out</a></li>
         {% else %}
-          <li role="presentation"><a href="{% url 'view_login' %}">Log in</a></li>
-          <li role="presentation"><a href="{% url 'view_register' %}">Create an account</a></li>
+          <li role="presentation" class="{% navactive request 'view_login' %}"><a href="{% url 'view_login' %}">Log in</a></li>
+          <li role="presentation" class="{% navactive request 'view_register' %}"><a href="{% url 'view_register' %}">Create an account</a></li>
         {% endif %}
       </ul>
     </nav>

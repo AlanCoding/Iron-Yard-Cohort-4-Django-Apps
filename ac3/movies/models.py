@@ -157,7 +157,7 @@ class Rating(models.Model):
 #    posted = models.DateTimeField(default=datetime.datetime(2000, 7, 14, 12, 30))
 #    posted = models.DateTimeField(default=None, null=True, blank=True)
     posted = models.IntegerField(default=0)
-    review = models.TextField(null=True)
+    review = models.TextField(null=True, blank=True)
     # datetime.datetime.fromtimestamp
 
     star_options = ((1,"*"), (2,"*"*2), (3,"*"*3), (4,"*"*4), (5,"*"*5))
