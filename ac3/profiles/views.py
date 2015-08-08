@@ -2,8 +2,8 @@ from django.shortcuts import render, redirect, render_to_response, get_object_or
 from django.contrib import messages
 import django.views.generic as django_views
 from django.contrib.auth import authenticate, login, logout
-from movies.forms import RaterForm
 from django.contrib.auth.decorators import login_required
+from movies.forms import RaterForm
 from profiles.forms import ProfileForm, LoginForm, UserForm
 from django.contrib.auth.models import User
 
@@ -78,23 +78,36 @@ def view_register(request):
 @login_required
 def edit_user(request):
     user = request.user
-    if request.method == "GET":
-        user_form = UserForm(instance=user)
-    elif request.method == "POST":
-        user_form = UserForm(instance=user, data=request.POST)
-        if user_form.is_valid():
-            n_user = user_form.save()
-            password = user.password
-            n_user.set_password(password)
-            n_user.save()
-            n_user = authenticate(username=n_user.username,
-                                  password=password)
-            login(request, n_user)
-            messages.add_message(request, messages.SUCCESS,
-                                 "Your profile has been updated!")
-            return redirect('/')
+    rater = user.rater
+    profile = user.profile
+    if request.method == "POST":
+        if "user_edit" in request.POST:
+            user_form = UserForm(request.POST)
+            if user_form.is_valid():
+                user = user_form
+                password = user.password
+                user.set_password(password)
+                user.save()
+                messages.add_message(request, messages.SUCCESS, "You have updated your account")
+        elif "rater_edit" in request.POST:
+            rater_form = RaterForm(request.POST)
+            if rater_form.is_valid():
+                user.rater = rater_form
+                user.rater.save()
+                messages.add_message(request, messages.SUCCESS, "You have updated your demographic info")
+        elif "profile_edit" in request.POST:
+            profile_form = ProfileForm(request.POST)
+            if profile_form.is_valid():
+                user.profile = profile_form
+                user.profile.save()
+                messages.add_message(request, messages.SUCCESS, "You have updated your profile")
 
-    return render(request, "profiles/edit_user.html", {"form": user_form})
+    user_form = UserForm()
+    rater_form = RaterForm()
+    profile_form = ProfileForm()
+    return render(request, "user_edit.html", {'user_form': user_form,
+                                        'rater_form': rater_form, 'profile_form':profile_form})
+
 
 
 class ListUsersView(django_views.ListView):

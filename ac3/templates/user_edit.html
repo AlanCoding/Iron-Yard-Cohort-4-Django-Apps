@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+
+{% block content %}
+
+  <!-- Main jumbotron for a primary marketing message or call to action -->
+  <div class="jumbotron">
+    <h1>User: {{ this_user.username }}</h1>
+    <p>Edit your user information here.
+    </p>
+  </div>
+
+
+    <div class="row">
+      <div class="col-sm-4">
+    <h2>Account Information</h2>
+      <form method="POST" action="{% url 'edit_user' %}">
+          {% csrf_token %}
+          {% bootstrap_form user_form %}
+        <input type="submit" name="user_edit" value="Edit User Info"/>
+      </form>
+
+    </div><div class="col-sm-4">
+
+    <h2>Profile Information</h2>
+      <form method="POST" action="{% url 'edit_user' %}">
+          {% csrf_token %}
+          {% bootstrap_form profile_form %}
+        <input type="submit" name="profile_edit" value="Edit Profile Info"/>
+      </form>
+
+    </div><div class="col-sm-4">
+
+    <h2>Demographic Information</h2>
+      <form method="POST" action="{% url 'edit_user' %}">
+          {% csrf_token %}
+          {% bootstrap_form rater_form %}
+        <input type="submit" name="rater_edit" value="Edit Demographic Info"/>
+      </form>
+
+    </div>
+
+    </div>
+
+
+  <hr />
+
+{% endblock %}
