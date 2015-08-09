@@ -84,27 +84,25 @@ def edit_user(request):
         if "user_edit" in request.POST:
             user_form = UserForm(request.POST)
             if user_form.is_valid():
-                user = user_form
-                password = user.password
+                user_form.save(commit=False)
+                password = user_form.password
                 user.set_password(password)
                 user.save()
                 messages.add_message(request, messages.SUCCESS, "You have updated your account")
         elif "rater_edit" in request.POST:
             rater_form = RaterForm(request.POST)
             if rater_form.is_valid():
-                user.rater = rater_form
-                user.rater.save()
+                rater_form.save()
                 messages.add_message(request, messages.SUCCESS, "You have updated your demographic info")
         elif "profile_edit" in request.POST:
             profile_form = ProfileForm(request.POST)
             if profile_form.is_valid():
-                user.profile = profile_form
-                user.profile.save()
+                profile_form.save()
                 messages.add_message(request, messages.SUCCESS, "You have updated your profile")
 
-    user_form = UserForm()
-    rater_form = RaterForm()
-    profile_form = ProfileForm()
+    user_form = UserForm(request.POST or None, instance=request.user)
+    rater_form = RaterForm(request.POST or None, instance=request.user.rater)
+    profile_form = ProfileForm(request.POST or None, instance=request.user.profile)
     return render(request, "user_edit.html", {'user_form': user_form,
                                         'rater_form': rater_form, 'profile_form':profile_form})
 
